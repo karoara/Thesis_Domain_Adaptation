@@ -45,7 +45,7 @@ synth2_experiments = {}
 
 synth2_experiments["e1"] = [[0, 1]]
 
-# -----------------------------------------------------------------------------
+# SYNTHETIC (3) DA TESTS ------------------------------------------------------
 
 synth3_experiments = {} # test_i --> [# datapoints per domain, # training domains, # test]
 
