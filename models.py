@@ -366,8 +366,7 @@ class SPEC_NET(torch.nn.Module):
       torch.nn.init.xavier_normal_(param)
 
   def forward(self, sentence):
-    logistic = torch.nn.Sigmoid()
-    relu = torch.nn.ReLU()
+    logistic, relu = torch.nn.Sigmoid(), torch.nn.ReLU()
     for i in range(int((len(self.params)/2))-1): 
       sentence = relu(torch.matmul(self.params[2*i], sentence) + self.params[2*i+1])
     return logistic(torch.matmul(self.params[-2], sentence) + self.params[-1])
