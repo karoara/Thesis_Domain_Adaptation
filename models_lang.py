@@ -151,7 +151,7 @@ class DA_TRANS_lang(torch.nn.Module):
       self.trans_out = MY_L(trans_in, self.out_d*self.out_d)
       self.attn_trans_out = MY_L(trans_in, attn_width*(self.out_d+2) + 1)
   
-  # forward method
+  # forward propagation
   def forward(self, input_inds, targets, lengths,
               doms, dom_lengths, get_data=False):
 
@@ -284,7 +284,7 @@ class DA_TRANS_lang(torch.nn.Module):
     else: 
       return outputs, targets
 
-  # accuracy method
+  # accuracy computation
   def accuracy(self, inputs, targets, lengths, domains,
                doms, dom_lengths, batch_size, loss):
     
@@ -323,7 +323,6 @@ class DA_TRANS_lang(torch.nn.Module):
     self.train()
     
     return crossent_loss, perplexity
-  
 
   # helper method for getting transformation, applying it
   def transform_inputs(self, transforms, inputs, lengths, in_lstm=True):
@@ -343,7 +342,6 @@ class DA_TRANS_lang(torch.nn.Module):
     
     return trans_inputs
   
-
   # helper method for getting attn network, applying it
   def compute_attn(self, attn_transforms, inputs, lengths, in_lstm=True):
 
