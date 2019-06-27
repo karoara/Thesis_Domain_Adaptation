@@ -1,0 +1,12 @@
+
+Imports complete. 
+
+Embeddings, test info set up. 
+
+Data set up. 
+
+Preparing vectors done. 
+
+Setting up model done. 
+ 
+

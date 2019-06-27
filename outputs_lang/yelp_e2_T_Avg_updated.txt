@@ -1,0 +1,20 @@
+
+Imports complete. 
+
+Embeddings, test info set up. 
+
+Data set up. 
+
+Vocabulary size for experiment: 
+27370
+
+
+Preparing vectors done. 
+
+Setting up model done. 
+ 
+
+Training stuff after epoch 0: 8.904643656299491 7366.099878440284
+Same-domain test stuff after epoch 0: 8.908906080247808 7397.5643287432495
+Test stuff after epoch 0: 8.90041603460722 7335.024528502074
+

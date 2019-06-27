@@ -1,0 +1,40 @@
+
+Imports complete. 
+
+Embeddings, test info set up. 
+
+Data set up. 
+
+Vocabulary size for experiment: 
+27370
+
+
+Preparing vectors done. 
+
+Setting up model done. 
+ 
+
+Training stuff after epoch 0: 6.517749603845367 677.0530321187038
+Same-domain test stuff after epoch 0: 6.533036400580828 687.4825178123479
+Test stuff after epoch 0: 6.522140128436484 680.0321853427698
+
+Training stuff after epoch 4: 6.26498049491655 525.8313294753373
+Same-domain test stuff after epoch 4: 6.302268388494787 545.8086129123324
+Test stuff after epoch 4: 6.289649877564521 538.9645924503604
+
+Training stuff after epoch 9: 6.181280671831886 483.6109067979184
+Same-domain test stuff after epoch 9: 6.231172620964387 508.3512374490457
+Test stuff after epoch 9: 6.220927127711976 503.1695182375813
+
+Training stuff after epoch 14: 6.146716562623728 467.1809064446256
+Same-domain test stuff after epoch 14: 6.210330763917947 497.8659001310969
+Test stuff after epoch 14: 6.199396055266097 492.4515377515832
+
+Training stuff after epoch 19: 6.11650770993059 453.27894560322176
+Same-domain test stuff after epoch 19: 6.189596282025267 487.6491937236886
+Test stuff after epoch 19: 6.179862830904348 482.9257093265517
+
+Training stuff after epoch 24: 6.10242564198677 446.94057412632134
+Same-domain test stuff after epoch 24: 6.179509816521119 482.7552596924846
+Test stuff after epoch 24: 6.170538208771477 478.44353931615274
+

@@ -1,0 +1,16 @@
+
+Imports complete. 
+
+Embeddings, test info set up. 
+
+Data set up. 
+
+Vocabulary size for experiment: 
+31729
+
+
+Preparing vectors done. 
+
+Setting up model done. 
+ 
+
