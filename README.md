@@ -20,16 +20,20 @@ The problem has significance from a "pure AI" perspective too, as humans solve i
 
 ### Conditioning Models
 
+There are multiple ways, each with different structures and biases, to have a model take domain information into account. The simplest option might be to concatenate an information vector to the model's input. However, more structured methods exist, as discussed in Dumoulin et al.'s paper on [Feature-Wise Transformations](https://distill.pub/2018/feature-wise-transformations/). They discuss a general-purpose method for conditioning a model's computation on some domain or task information, called "FiLM", or Feature-Wise Linear Modulation. In FiLM, a transformation is trained to take an information vector, and output the parameters of an affine layer that acts on a representation in a model. The affine layer essentially consists of gating and bias vectors - in the domain adaptation context, they switch nodes and feature maps in the model on and off for the given domain. 
+
+
+
 ### The Conditioning Mechanism
 
 As stated, for my thesis, I've considered the zero-shot adaptation problem in the language context. A simple way in which the same language varies in its meaning/interpretation across domains is through changes in word meaning. While reading a horror film review, the word "terrifying" might be used to indicate a positive experience; in a restaurant review, this seems unlikely. Words like "LGBT" and "gun" are used with different connotations depending on whether they appear on a left-leaning or right-leaning online community. 
 
-To account for this kind of change from domain to domain, we might train a "mechanism" that learns to accept some domain information as input, and produce an operation that modifies the words in an input sentence properly for the corresponding domain. The mechanism is parametrized by two transformations, each of which take domain information as input. These transformations learn to produce a transformation and a single-layered attention network, which work in the following way:
+To account for this kind of change from domain to domain that we see in language, we might train a "mechanism" that learns to accept some domain information as input, and produce an operation that modifies the words in an input sentence properly for the corresponding domain. The mechanism is parametrized by two transformations, each of which take domain information as input. These transformations learn to produce a transformation and a single-layered attention network, which work in the following way:
 
 **1.** The produced transformation takes the generic embeddings in the input sentence and transforms them for the current domain:
 ![Mechanism Transformation](images/Mech1.png)
 
-**2.** The attention network outputs a set of attentional weights describing the extent to which the transformed embedding - as opposed to the initial, generic embedding - should be used:
+**2.** The attention network outputs a set of attentional weights describing the extent to which the transformed embedding - as opposed to the initial, generic embedding - should be used to represent each word:
 ![Attention Network](images/Mech2.png)
 
 **3.** Using the attentional weights, a weighted linear combination between the transformed and generic embeddings is taken to create new embeddings that represent the input sentence:
@@ -37,7 +41,9 @@ To account for this kind of change from domain to domain, we might train a "mech
 
 Once the new set of embeddings has been obtained, they are input to the language model that performs the task. A straightforward way to think about this is that the transformation and attention network the mechanism produces are part of the language model's embedding layer - we are thus using domain information to condition the embedding layer of a language model. The two transformations that parametrize the mechanism are trained in tandem with the language model on data and information from a set of training domains.
 
-To illustrate what this is meant to do in practice, consider the following scenario: we want to train a model to perform binary sentiment classification on comments from online communities. We might train a model to perform the task on comments from a subset of communities, and train a mechanism simultaneously to produce transformations/attn networks that modify a comment's embeddings for the online community that it is from. During training, the mechanism might learn to recognize indicators of political orientation from the domain information it is given, and produce transformations/attn networks that modify word accordingly. When given domain information for a new domain, it might recognize that the domain is left-leaning, and produce a transformation that maps words like "LGBT" to a latent positive meaning, and "gun" to a latent negative meaning. It might also produce an attention network that chooses to represent the words "LGBT" and "gun" with the transformed embeddings, but chooses to represent words like "hello" or "goodbye" with generic ones (as their meaning doesn't really change with political orientation). 
+To illustrate what this is meant to do in practice, consider the following scenario: we want to train a model to perform binary sentiment classification on comments from online communities. We might train a model to perform the task on comments from a subset of communities, and train a mechanism simultaneously to produce transformations/attn networks that modify a comment's embeddings for the online community that it is from. During training, the mechanism might learn to recognize indicators of political orientation from the domain information it is given, and produce transformations/attn networks that modify the embeddings in comments accordingly. When given domain information for a new domain, it might recognize that the domain is left-leaning, and: 
+- Produce a transformation that maps "LGBT" to a latent positive meaning, and "gun" to a latent negative meaning.
+- Produce an attention network that chooses to represent the words "LGBT" and "gun" with the transformed embeddings, but chooses to represent words like "hello" or "goodbye" with generic ones (as their meaning doesn't really change with political orientation). 
 
 ### Experiments
 
