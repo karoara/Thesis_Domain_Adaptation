@@ -1,6 +1,8 @@
-# Conditioning Language Models for Domain Adaptation (Senior Thesis)
+# Conditioning Language Models for Domain Adaptation
 
-This repository contains the code for my senior thesis on a method for zero-shot domain adaptation. In simpler terms, this means getting a model to be able to perform a task well in domains that it does not train on (in practice, probably because little-to-no training data is available in those domains). All models here are implemented in Pytorch. Read the thesis [here](https://www.dropbox.com/s/qu3k4m6lou60u5b/Thesis_Final_Report.pdf?dl=0).
+This repository contains the code for my senior thesis on a method for zero-shot domain adaptation. In simpler terms, this means training a model to be able to perform a task well in a domain that it has not trained on, optionally using very little data from the domain in question (if available) to fine-tune the model. All models here are implemented in Pytorch. Read the thesis [here](https://www.dropbox.com/s/qu3k4m6lou60u5b/Thesis_Final_Report.pdf?dl=0).
+
+At a very high level, I've attempted to solve the aforementioned problem in a language context, by training a model to modulate the way it performs a task based on some information about the domain that its input is coming from. From a more theoretical/"pure" AI perspective, this problem matters because humans solve it all the time - we're very good at learning something in a new domain with very little experience, or learning to condition the way we do something in a new setting based on some high-level knowledge about that setting. We'd like to make AI that can do this stuff too. From a more practical perspective, oftentimes little-to-no training data is available in a particular domain - coming up with a good way to modulate a pretrained model with some information about the domain would likely improve performance over training a model from scratch on a very small amount of data, or simply using a pre-trained model that has not been trained to take domain information into account.
 
 ## About the Method
 
@@ -23,5 +25,3 @@ In order to get models to generalize well to domains they do not train on, I
 ### Dependencies
 
 ### Running Experiments
-
-Abstract: We consider a setting in which a language model - given access to some information about an input’s domain - is trained to learn a task over an entire distribution of domains, with the goal of generalizing to inputs from domains that are not in its training data. Drawing inspiration from existing methods outside our problem setting, we develop a mechanism that conditions an operation in a language model to modify its representation of an input based on information about a domain. This mechanism is meant to be trained jointly with the task- performing model, and makes few assumptions about the model architecture. We perform experiments in which we compare the performance of a model that is augmented with our mechanism to a baseline that is not for language modeling and sentiment analysis tasks. While the conditioning mechanism does not currently provide a performance improvement on real data, experiments with synthetic data suggest that it is capable of doing so, and that some fine-tuning and further experimentation may enable it to work better.
