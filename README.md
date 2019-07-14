@@ -1,30 +1,33 @@
 # Conditioning Language Models for Domain Adaptation
 
-This repository contains the code for my senior thesis on a method for training language models to perform zero-shot domain adaptation. In simple terms, "zero-shot domain adaptation" here means training a model to be able to perform a task well in a domain that it has not trained on. At a high level, I've attempted to solve this problem by coming up with a mechanism that learns, alongside a model, to modulate the model's parameters based on some information about the domain that the model's input is coming from. All models are implemented in Pytorch. 
-
-Read the thesis [here](https://www.dropbox.com/s/qu3k4m6lou60u5b/Thesis_Final_Report.pdf?dl=0).
-
-### Why Does This Matter?
-
-**From a more theoretical/"pure" AI perspective:** The problem matters because humans solve it all the time - we're very good at learning something in a new domain with very little experience, or learning to condition the way we do something in a new setting based on some high-level knowledge about that setting. We'd like to make AI that can do this stuff too. 
-
-**From a more practical perspective:** Consider a setting in which we want to perform a task in a certain domain, but have no training data for that domain. 
-
-Oftentimes little-to-no training data is available in a particular domain - coming up with a good way to modulate a pretrained model with some information about the domain would likely improve performance over training a model from scratch on a very small amount of data, or simply using a pre-trained model that has not been trained to take domain information into account.
+This repository contains the code for my senior thesis on a method for training language models to perform zero-shot domain adaptation. All models are implemented in Pytorch. Read the thesis [here](https://www.dropbox.com/s/qu3k4m6lou60u5b/Thesis_Final_Report.pdf?dl=0).
 
 ## About the Method
 
-### Some Intuition
+### What is "zero-shot domain adaptation"? Why does it matter?
 
-The way you interpret language when reading a horror film review is different from the way you do so when reading a restaurant review (for the former, the word "terrifying" might be used to indicate a positive experience; in the latter, that seems unlikely). Neural models used for a variety of language tasks might implicitly learn to recognize what domain an input sentence belongs to among those it trains on, and condition the way they treat its language accordingly. However, if we want a model to generalize well to some domain that it has not trained on, it might be tricky for the model to recognize how to treat language from that domain. It may have simply "memorized" how to treat language for the domains it has trained on - it has not explicitly learned how to do so based on the kind of domain it is dealing with. For my thesis, I attempted to address this by training models to modify the way they perform a task based on some information about the domain their input is from. 
+In simple terms, "zero-shot domain adaptation" here means training a model to be able to perform a task well in domains that it has not trained on - to adapt well to such domains with "zero" training data. At a high level, I've attempted to solve this problem in a language context, by coming up with a mechanism that learns to modulate a language model's parameters based on some information about the domain that the model's input is coming from.
 
-## Problem Setting
+To motivate the problem from a practical perspective, consider a setting in which we want to perform a task in a certain domain, but have no training data for that domain. Perhaps we have some labeled training data for the task from other domains. We might try training a model on these domains and then transfer it to the domains we care about.
 
-The method I developed assumes that labeled training data for a desired task is available for a set of domains, and that some high-level information on these domains - and on others that we might want a model to generalize well to, but for which there is no training data - is also available. 
+The model ends up learning a set of features for the domains it trains on. Assuming that the domains not present in the training data are different from the ones that are, a couple undesirable things might be happening:
+- The model might learn "average" features across the domains - in this case, it doesn't really learn to adapt the features it looks for based on the training domain given, and certain doesn't do so for non-training domains. 
+- The model might learn the domain-specific features for the domains it trains on - in this case, it still doesn't learn to 
+
+The problem has significance from a "pure AI" perspective too, as humans solve it all the time. We're very good at learning something in a new domain with little-to-no experience, or conditioning the way we do something in a new setting based on some high-level knowledge about that setting. We'd like to make AI that can do this stuff too. 
 
 ### The Conditioning Mechanism
 
-In order to get models to generalize well to domains they do not train on, I 
+As stated, for my thesis, I've considered the zero-shot adaptation problem in the language context. A common way in which the same language varies in its meaning/interpretation across domains is through changes in word meaning. While reading a horror film review, the word "terrifying" might be used to indicate a positive experience; in a restaurant review, this seems unlikely. Words like "LGBT" and "gun" are used with different connotations depending on whether they appear on a left-leaning or right-leaning online community. 
+
+To account for this kind of change from domain to domain, we can train a mechanism that learns to accept some domain information as input, and produce an operation that modifies the words in an input sentence properly for the corresponding domain. The mechanism is parametrized by two transformations, each of which take domain information as input. These transformations learn to produce a transformation and a single-layered attention network, which work in the following way:
+- The produced transformation takes the generic embeddings in the input sentence and transforms them for the current domain.
+- The attention network outputs a set of attentional weights describing the extent to which the transformed embedding - as opposed to the initial, generic embedding - should be used.
+- Using the attentional weights, a weighted linear combination between the transformed and generic embeddings is used to create new embeddings that represent the input sentence.
+
+Once the new set of embeddings has been obtained, they are input to the language model that performs the task. A straightforward way to think about this is that the transformation and attention network the mechanism produces are part of the language model's embedding layer - we are thus using domain information to condition the embedding layer of a language model. The two transformations that parametrize the mechanism are trained in tandem with the language model on data and information from a set of training domains.
+
+To illustrate what this is meant to do in practice, we can come back to one of the earlier examples. We might train a model to perform sentiment analysis on comments, and train a mechanism simultaneously to produce transformations/attn networks that modify a comment's word embeddings for the online community in which the comment occurs. The mechanism might learn to recognize left-leaning or right-leaning indicators from the domain information it is given, and produce transformations/attn networks that modify word accordingly. When given domain information indicating left-leaning discourse, it would produce a transformation that maps words like "LGBT" to a latent positive meaning, and "gun" to a latent negative meaning. It would also produce an attention network that chooses to represent the words "LGBT" and "gun" with the transformed embeddings, but chooses to represent words like "hello" or "goodbye" with generic ones (as their meaning doesn't really change with political leaning). 
 
 ### Experiments
 
