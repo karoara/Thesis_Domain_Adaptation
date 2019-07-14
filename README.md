@@ -22,11 +22,14 @@ As stated, for my thesis, I've considered the zero-shot adaptation problem in th
 
 To account for this kind of change from domain to domain, we might train a "mechanism" that learns to accept some domain information as input, and produce an operation that modifies the words in an input sentence properly for the corresponding domain. The mechanism is parametrized by two transformations, each of which take domain information as input. These transformations learn to produce a transformation and a single-layered attention network, which work in the following way:
 
-The produced transformation takes the generic embeddings in the input sentence and transforms them for the current domain:
+**1.** The produced transformation takes the generic embeddings in the input sentence and transforms them for the current domain:
 ![Mechanism Transformation](images/Mech1.png)
 
-- The attention network outputs a set of attentional weights describing the extent to which the transformed embedding - as opposed to the initial, generic embedding - should be used.
-- Using the attentional weights, a weighted linear combination between the transformed and generic embeddings is taken to create new embeddings that represent the input sentence.
+**2.** The attention network outputs a set of attentional weights describing the extent to which the transformed embedding - as opposed to the initial, generic embedding - should be used:
+![Attention Network](images/Mech2.png)
+
+**3.** Using the attentional weights, a weighted linear combination between the transformed and generic embeddings is taken to create new embeddings that represent the input sentence:
+![Weighted Combination](images/Mech3.png)
 
 Once the new set of embeddings has been obtained, they are input to the language model that performs the task. A straightforward way to think about this is that the transformation and attention network the mechanism produces are part of the language model's embedding layer - we are thus using domain information to condition the embedding layer of a language model. The two transformations that parametrize the mechanism are trained in tandem with the language model on data and information from a set of training domains.
 
