@@ -20,9 +20,9 @@ The problem has significance from a "pure AI" perspective too, as humans solve i
 
 ### Conditioning Models
 
-There are multiple ways, each with different structures and biases, to have a model take domain information into account. The simplest option might be to concatenate an information vector to the model's input. However, more structured methods exist, as discussed in Dumoulin et al.'s paper on [Feature-Wise Transformations](https://distill.pub/2018/feature-wise-transformations/). They discuss a general-purpose method for conditioning a model's computation on some domain or task information, called "FiLM", or Feature-Wise Linear Modulation. In FiLM, a transformation is trained to take an information vector, and output the parameters of an affine layer that acts on a representation in a model. The affine layer essentially consists of gating and bias vectors - in the domain adaptation context, they switch nodes and feature maps in the model on and off for the given domain. 
+There are multiple ways, each with different structures and biases, to have a model take domain information into account. The simplest option might be to concatenate an information vector to the model's input. However, more structured methods exist, as discussed in Dumoulin et al.'s paper on [Feature-Wise Transformations](https://distill.pub/2018/feature-wise-transformations/). They discuss a general-purpose method for conditioning a model's computation on some domain or task information, called "FiLM", or Feature-Wise Linear Modulation. In FiLM, a transformation is trained to take an information vector, and output the parameters of an affine layer that acts on a set of features/representation in a model. The affine layer essentially consists of gating and bias vectors - in the domain adaptation context, they switch nodes or feature maps in the model on and off for the given domain:
 
-
+![FiLM](images/Film3.png)
 
 ### The Conditioning Mechanism
 
